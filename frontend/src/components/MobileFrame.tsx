@@ -35,11 +35,11 @@ export default function MobileFrame({ title, icon, color, children }: MobileFram
         <span className={`text-sm font-medium ${styles.text}`}>{title}</span>
       </div>
 
-      {/* 아이폰 프레임 */}
+      {/* 아이폰 프레임 - iPhone 15 Pro 비율 (393:852 = 1:2.168) */}
       <div className="relative">
         {/* 외부 프레임 (스테인리스 스틸 느낌) */}
         <div
-          className="relative w-[320px] h-[660px] rounded-[50px] p-[12px]"
+          className="relative w-[340px] h-[737px] rounded-[55px] p-[12px]"
           style={{
             background: "linear-gradient(145deg, #2a2a2a, #1a1a1a)",
             boxShadow: `
@@ -51,16 +51,16 @@ export default function MobileFrame({ title, icon, color, children }: MobileFram
         >
           {/* 내부 스크린 */}
           <div
-            className="relative w-full h-full rounded-[40px] overflow-hidden"
+            className="relative w-full h-full rounded-[44px] overflow-hidden"
             style={{
               background: "#000",
               boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.05)",
             }}
           >
-            {/* Dynamic Island */}
+            {/* Dynamic Island - 실제 비율 (126 x 37pt 기준) */}
             <div className="absolute top-3 left-1/2 -translate-x-1/2 z-20">
               <div
-                className="w-[100px] h-[32px] bg-black rounded-full flex items-center justify-center"
+                className="w-[110px] h-[34px] bg-black rounded-full flex items-center justify-center"
                 style={{
                   boxShadow: "0 0 0 1px rgba(255,255,255,0.1)",
                 }}
@@ -109,32 +109,32 @@ export default function MobileFrame({ title, icon, color, children }: MobileFram
               </div>
             </div>
 
-            {/* 홈 인디케이터 */}
+            {/* 홈 인디케이터 - 실제 비율 (134 x 5pt 기준) */}
             <div className="absolute bottom-2 left-1/2 -translate-x-1/2">
-              <div className="w-32 h-1 bg-white/60 rounded-full" />
+              <div className="w-[120px] h-[5px] bg-white/60 rounded-full" />
             </div>
           </div>
         </div>
 
-        {/* 사이드 버튼들 */}
+        {/* 사이드 버튼들 - iPhone 15 Pro 위치 기준 */}
         {/* 무음 스위치 */}
         <div
-          className="absolute left-[-2px] top-24 w-[3px] h-6 rounded-l-sm"
+          className="absolute left-[-2px] top-[120px] w-[3px] h-7 rounded-l-sm"
           style={{ background: "linear-gradient(to bottom, #3a3a3a, #2a2a2a)" }}
         />
         {/* 볼륨 업 */}
         <div
-          className="absolute left-[-2px] top-36 w-[3px] h-10 rounded-l-sm"
+          className="absolute left-[-2px] top-[170px] w-[3px] h-12 rounded-l-sm"
           style={{ background: "linear-gradient(to bottom, #3a3a3a, #2a2a2a)" }}
         />
         {/* 볼륨 다운 */}
         <div
-          className="absolute left-[-2px] top-48 w-[3px] h-10 rounded-l-sm"
+          className="absolute left-[-2px] top-[230px] w-[3px] h-12 rounded-l-sm"
           style={{ background: "linear-gradient(to bottom, #3a3a3a, #2a2a2a)" }}
         />
         {/* 전원 버튼 */}
         <div
-          className="absolute right-[-2px] top-36 w-[3px] h-16 rounded-r-sm"
+          className="absolute right-[-2px] top-[180px] w-[3px] h-[70px] rounded-r-sm"
           style={{ background: "linear-gradient(to bottom, #3a3a3a, #2a2a2a)" }}
         />
       </div>
