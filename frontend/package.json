@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.71.2",
+    "@notionhq/client": "^2.2.15",
     "@tailwindcss/postcss": "^4.1.18",
     "@types/node": "^25.0.6",
     "@types/react": "^19.2.8",
