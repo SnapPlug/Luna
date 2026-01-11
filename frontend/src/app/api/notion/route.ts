@@ -128,12 +128,14 @@ export async function GET() {
       );
     }
 
-    const response = await notion.databases.query({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const response = await (notion as any).databases.query({
       database_id: databaseId,
       sorts: [{ property: "Date", direction: "descending" }],
       page_size: 20,
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const items = response.results.map((page: any) => ({
       id: page.id,
       title: page.properties.Title?.title?.[0]?.text?.content || "제목 없음",
