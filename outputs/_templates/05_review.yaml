@@ -1,0 +1,42 @@
+review:
+  created_at: "{ISO 8601 timestamp}"
+
+  overall_score: 0  # 100점 만점
+
+  channels:
+    linkedin:
+      score: 0
+      char_count: 0
+      checks:
+        tone_consistency: false
+        ai_expression_free: false
+        format_compliance: false
+        cta_appropriate: false
+      issues: []
+      suggestions: []
+
+    x:
+      score: 0
+      char_count: 0
+      checks:
+        tone_consistency: false
+        ai_expression_free: false
+        format_compliance: false
+        cta_appropriate: false
+      issues: []
+      suggestions: []
+
+    newsletter:
+      score: 0
+      char_count: 0
+      checks:
+        tone_consistency: false
+        ai_expression_free: false
+        format_compliance: false
+        cta_appropriate: false
+      issues: []
+      suggestions: []
+
+  ai_expressions_found: []
+
+  final_recommendation: "발행 가능 | 수정 필요 | 재작성 권장"

@@ -1,0 +1,33 @@
+analysis:
+  created_at: "{ISO 8601 timestamp}"
+
+  core_message: |
+    핵심 메시지 한 줄 요약
+
+  key_points:
+    - point: "첫 번째 포인트"
+      detail: "상세 설명"
+    - point: "두 번째 포인트"
+      detail: "상세 설명"
+    - point: "세 번째 포인트"
+      detail: "상세 설명"
+
+  pain_points:
+    - "독자가 겪는 문제 1"
+    - "독자가 겪는 문제 2"
+
+  target_audience:
+    primary: "주요 타겟"
+    secondary: "부가 타겟"
+
+  hook_recommendation:
+    pattern: "question | shock | number | story | secret | contrast"
+    reason: "추천 이유"
+    example: "예시 훅 문장"
+
+  tone_keywords:
+    - "친근한"
+    - "실용적인"
+    - "구체적인"
+
+  content_type: "tip | insight | story | tutorial | comparison"
