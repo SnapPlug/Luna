@@ -28,80 +28,19 @@ export async function POST(request: Request) {
         Date: {
           date: { start: new Date().toISOString().split("T")[0] },
         },
+        Source: {
+          rich_text: [{ text: { content: (source || "").slice(0, 2000) } }],
+        },
+        X: {
+          rich_text: [{ text: { content: (x || "").slice(0, 2000) } }],
+        },
+        LinkedIn: {
+          rich_text: [{ text: { content: (linkedin || "").slice(0, 2000) } }],
+        },
+        Newsletter: {
+          rich_text: [{ text: { content: (newsletter || "").slice(0, 2000) } }],
+        },
       },
-      children: [
-        {
-          object: "block",
-          type: "heading_2",
-          heading_2: {
-            rich_text: [{ type: "text", text: { content: "📝 원본" } }],
-          },
-        },
-        {
-          object: "block",
-          type: "paragraph",
-          paragraph: {
-            rich_text: [{ type: "text", text: { content: source || "" } }],
-          },
-        },
-        {
-          object: "block",
-          type: "divider",
-          divider: {},
-        },
-        {
-          object: "block",
-          type: "heading_2",
-          heading_2: {
-            rich_text: [{ type: "text", text: { content: "𝕏 X" } }],
-          },
-        },
-        {
-          object: "block",
-          type: "paragraph",
-          paragraph: {
-            rich_text: [{ type: "text", text: { content: x || "" } }],
-          },
-        },
-        {
-          object: "block",
-          type: "divider",
-          divider: {},
-        },
-        {
-          object: "block",
-          type: "heading_2",
-          heading_2: {
-            rich_text: [{ type: "text", text: { content: "💼 LinkedIn" } }],
-          },
-        },
-        {
-          object: "block",
-          type: "paragraph",
-          paragraph: {
-            rich_text: [{ type: "text", text: { content: linkedin || "" } }],
-          },
-        },
-        {
-          object: "block",
-          type: "divider",
-          divider: {},
-        },
-        {
-          object: "block",
-          type: "heading_2",
-          heading_2: {
-            rich_text: [{ type: "text", text: { content: "📧 Newsletter" } }],
-          },
-        },
-        {
-          object: "block",
-          type: "paragraph",
-          paragraph: {
-            rich_text: [{ type: "text", text: { content: newsletter || "" } }],
-          },
-        },
-      ],
     });
 
     return NextResponse.json({
@@ -111,8 +50,9 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     console.error("Notion API Error:", error);
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { error: "Notion 저장 중 오류가 발생했습니다." },
+      { error: "Notion 저장 중 오류가 발생했습니다.", details: errorMessage },
       { status: 500 }
     );
   }
