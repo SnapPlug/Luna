@@ -5,6 +5,7 @@ import Image from "next/image";
 import MobileFrame from "@/components/MobileFrame";
 import InputPanel from "@/components/InputPanel";
 import OutputPanel from "@/components/OutputPanel";
+import { analyzeContent, saveToNotion } from "@/lib/api";
 
 interface AnalysisResult {
   linkedin: string;
@@ -39,26 +40,15 @@ export default function Home() {
     setIsLoading(true);
     setSaveStatus(null);
 
-    try {
-      const response = await fetch("/api/analyze", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ content }),
-      });
+    const response = await analyzeContent(content);
 
-      if (!response.ok) {
-        throw new Error("분석 중 오류가 발생했습니다.");
-      }
-
-      const data = await response.json();
-      setResults(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "알 수 없는 오류가 발생했습니다.");
-    } finally {
-      setIsLoading(false);
+    if (response.error) {
+      setError(response.error);
+    } else if (response.data) {
+      setResults(response.data);
     }
+
+    setIsLoading(false);
   };
 
   const handleSaveToNotion = async () => {
@@ -67,37 +57,25 @@ export default function Home() {
     setIsSaving(true);
     setSaveStatus(null);
 
-    try {
-      // 제목 추출 (첫 줄 또는 첫 20자)
-      const title = content.split("\n")[0].slice(0, 50) || "Luna 변환 결과";
+    // 제목 추출 (첫 줄 또는 첫 50자)
+    const title = content.split("\n")[0].slice(0, 50) || "Luna 변환 결과";
 
-      const response = await fetch("/api/notion", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title,
-          source: content,
-          x: results.x,
-          linkedin: results.linkedin,
-          newsletter: results.newsletter,
-        }),
-      });
+    const response = await saveToNotion({
+      title,
+      source: content,
+      x: results.x,
+      linkedin: results.linkedin,
+      newsletter: results.newsletter,
+    });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "저장 중 오류가 발생했습니다.");
-      }
-
-      setSaveStatus({ success: true, url: data.url });
-    } catch (err) {
+    if (response.error) {
       setSaveStatus({ success: false });
-      setError(err instanceof Error ? err.message : "저장 중 오류가 발생했습니다.");
-    } finally {
-      setIsSaving(false);
+      setError(response.error);
+    } else if (response.data) {
+      setSaveStatus({ success: true, url: response.data.url });
     }
+
+    setIsSaving(false);
   };
 
   return (

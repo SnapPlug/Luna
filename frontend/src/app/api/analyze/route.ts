@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
+import { performSecurityChecks, wrapSystemPrompt } from "@/lib/security";
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
-const SYSTEM_PROMPT = `당신은 Luna, AI 마케팅 콘텐츠 변환 전문가입니다.
+const BASE_SYSTEM_PROMPT = `당신은 Luna, AI 마케팅 콘텐츠 변환 전문가입니다.
 사용자가 제공하는 스레드/원본 콘텐츠를 분석하고, X(트위터), 링크드인, 뉴스레터 3개 채널로 변환합니다.
 
 ## 핵심 규칙
@@ -57,23 +58,46 @@ const SYSTEM_PROMPT = `당신은 Luna, AI 마케팅 콘텐츠 변환 전문가�
   "newsletter": "뉴스레터 콘텐츠 (1,500~3,000자)"
 }`;
 
+// 방어적 시스템 프롬프트 적용
+const SYSTEM_PROMPT = wrapSystemPrompt(BASE_SYSTEM_PROMPT);
+
 export async function POST(request: Request) {
   try {
-    const { content } = await request.json();
-
-    if (!content || content.length < 50) {
+    // 요청 본문 파싱
+    let body;
+    try {
+      body = await request.json();
+    } catch {
       return NextResponse.json(
-        { error: "콘텐츠가 너무 짧습니다. 최소 50자 이상 필요합니다." },
+        { error: "잘못된 JSON 형식입니다." },
         { status: 400 }
       );
     }
 
+    const { content } = body;
+
+    // 종합 보안 검사 (인증 + Rate Limiting + 입력 검증 + 프롬프트 인젝션 탐지)
+    const securityCheck = await performSecurityChecks(request, {
+      requireAuth: true,
+      rateLimit: { maxRequests: 10, windowMs: 60000 }, // 분당 10회
+      validateContent: true,
+      content,
+    });
+
+    if (!securityCheck.passed) {
+      return securityCheck.response;
+    }
+
+    // API 키 확인
     if (!process.env.ANTHROPIC_API_KEY) {
       return NextResponse.json(
         { error: "API 키가 설정되지 않았습니다." },
         { status: 500 }
       );
     }
+
+    // 정제된 콘텐츠 사용
+    const sanitizedContent = securityCheck.sanitizedContent || content;
 
     const message = await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",
@@ -83,7 +107,7 @@ export async function POST(request: Request) {
           role: "user",
           content: `다음 원본 콘텐츠를 X, 링크드인, 뉴스레터로 변환해주세요:
 
-${content}`,
+${sanitizedContent}`,
         },
       ],
       system: SYSTEM_PROMPT,
@@ -116,7 +140,8 @@ ${content}`,
 
     return NextResponse.json(parsedResponse);
   } catch (error) {
-    console.error("API Error:", error);
+    // 에러 로깅 (민감 정보 제외)
+    console.error("API Error:", error instanceof Error ? error.message : "Unknown error");
     return NextResponse.json(
       { error: "서버 오류가 발생했습니다." },
       { status: 500 }
