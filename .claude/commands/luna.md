@@ -38,7 +38,20 @@ $ARGUMENTS 값을 파싱하여 다음을 수행하세요:
 2. `outputs/{YYYY-MM-DD}_{slug}/` 폴더 생성
 3. 원본을 `00_source.md`로 저장
 
-### 4. 콘텐츠 분석
+### 4. 원본 개선 (NEW)
+
+`.claude/agents/source-improver.md` 에이전트 지침을 따라:
+- 문장 구조 진단 및 개선 (긴 문장 분리, 중복 제거)
+- 문단 구조 개선 (논리 흐름, 리스트화)
+- 후킹 멘트 강화 (질문형/숫자형/충격형 옵션 제시)
+- 가독성 향상
+- Before/After 비교 제공
+
+결과를 `00_source_improved.md`로 저장
+
+**중요**: 이후 채널별 변환은 개선된 원본(`00_source_improved.md`)을 기반으로 진행
+
+### 5. 콘텐츠 분석
 
 `.claude/agents/content-analyzer.md` 에이전트 지침을 따라:
 - 핵심 메시지 추출
@@ -48,7 +61,7 @@ $ARGUMENTS 값을 파싱하여 다음을 수행하세요:
 
 결과를 `01_analysis.yaml`로 저장
 
-### 5. 채널별 변환
+### 6. 채널별 변환
 
 선택된 채널에 대해 순차 실행:
 
@@ -57,27 +70,43 @@ $ARGUMENTS 값을 파싱하여 다음을 수행하세요:
 → `02_linkedin.md` 저장
 
 #### X (--channel 미지정 또는 x 포함 시)
-`.claude/agents/x-writer.md` 지침을 따라 280자 이내 콘텐츠 생성
+`.claude/agents/x-writer.md` 지침을 따라 280자 이내 콘텐츠 생성 (알고리즘 최적화 적용)
 → `03_x.md` 저장
 
 #### 뉴스레터 (--channel 미지정 또는 newsletter 포함 시)
 `.claude/agents/newsletter-writer.md` 지침을 따라 1,500~3,000자 콘텐츠 생성
 → `04_newsletter.md` 저장
 
-### 6. 검수
+### 7. 검수
 
 `.claude/agents/reviewer.md` 지침을 따라 생성된 콘텐츠 검수
 → `05_review.yaml` 저장
 
-### 7. README 업데이트
+### 8. README 업데이트
 
 폴더의 `README.md`를 실제 결과로 업데이트
 
-### 8. 최종 출력
+### 9. 최종 출력
 
 다음 형식으로 결과 출력:
 
 ```markdown
+## ✨ 원본 개선
+[개선된 원본 전문]
+
+### Before/After 비교
+| 구분 | Before | After |
+|------|--------|-------|
+| 후킹 | [원본 첫 줄] | [개선된 첫 줄] |
+| 문장 | [예시] | [예시] |
+
+### 대안 훅 옵션
+- A (질문형): ...
+- B (숫자형): ...
+- C (충격형): ...
+
+---
+
 ## 📊 콘텐츠 분석
 [분석 결과 요약 - 핵심 메시지, 주요 포인트, 추천 훅 패턴]
 

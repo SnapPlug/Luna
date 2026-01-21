@@ -11,6 +11,7 @@ Luna가 생성하는 콘텐츠의 폴더 구조와 파일 형식을 정의합니
 outputs/
 ├── _templates/                    ← 빈 템플릿 (참조용)
 │   ├── 00_source.md
+│   ├── 00_source_improved.md
 │   ├── 01_analysis.yaml
 │   ├── 02_linkedin.md
 │   ├── 03_x.md
@@ -20,6 +21,7 @@ outputs/
 │
 └── {YYYY-MM-DD}_{slug}/          ← 콘텐츠별 폴더
     ├── 00_source.md              ← 원본 저장
+    ├── 00_source_improved.md     ← 개선된 원본 (NEW)
     ├── 01_analysis.yaml          ← 분석 결과
     ├── 02_linkedin.md            ← 링크드인 콘텐츠
     ├── 03_x.md                   ← X 콘텐츠
@@ -70,6 +72,74 @@ outputs/
 ## 원문
 
 {original_content}
+```
+
+---
+
+### 00_source_improved.md
+개선된 원본 콘텐츠
+
+```markdown
+# 원본 개선 결과
+
+## 메타 정보
+- 개선 일시: {timestamp}
+- 원본 길이: {original_char_count}자
+- 개선 후 길이: {improved_char_count}자
+
+---
+
+## 진단 결과
+
+### 문장 구조
+- 점수: {score}/10
+- 주요 이슈: {issues}
+
+### 문단 구조
+- 점수: {score}/10
+- 주요 이슈: {issues}
+
+### 후킹 멘트
+- 현재 타입: {current_hook_type}
+- 임팩트 점수: {score}/10
+- 권장 타입: {recommended_hook_type}
+
+### 가독성
+- 점수: {score}/10
+- 주요 이슈: {issues}
+
+---
+
+## 개선된 원본
+
+{improved_content}
+
+---
+
+## 변경 사항 요약
+
+### 후킹 멘트 개선
+- Before: {original_hook}
+- After: {improved_hook}
+- 이유: {reason}
+
+### 주요 변경
+| 구분 | Before | After |
+|------|--------|-------|
+| {area} | {before} | {after} |
+
+---
+
+## 대안 훅 옵션
+
+### 옵션 A (질문형)
+{question_hook}
+
+### 옵션 B (숫자형)
+{number_hook}
+
+### 옵션 C (충격형)
+{shock_hook}
 ```
 
 ---

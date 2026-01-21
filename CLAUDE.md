@@ -6,6 +6,7 @@ luna/
 ├── CLAUDE.md                          ← 마스터 프롬프트 (Claude Code 진입점)
 └── .claude/
 |   ├── agents/
+|   │   ├── source-improver.md         # 원본 개선 (NEW)
 |   │   ├── content-analyzer.md        # 원본 분석
 |   │   ├── linkedin-writer.md         # 링크드인 변환
 |   │   ├── x-writer.md                # X 변환
@@ -22,6 +23,7 @@ luna/
 └── outputs/                               ← 신규
     ├── _templates/                        ← 빈 템플릿
     │   ├── 00_source.md
+    │   ├── 00_source_improved.md
     │   ├── 01_analysis.yaml
     │   ├── 02_linkedin.md
     │   ├── 03_x.md
@@ -31,6 +33,7 @@ luna/
     │
     └── {YYYY-MM-DD}_{슬러그}/             ← 콘텐츠별 폴더
         ├── 00_source.md
+        ├── 00_source_improved.md          ← 개선된 원본 (NEW)
         ├── 01_analysis.yaml
         ├── 02_linkedin.md
         ├── 03_x.md
@@ -52,9 +55,10 @@ luna/
 - `.claude/skills/cta-library.md` - CTA 문구 라이브러리
 
 ### Agents (변환 로직)
+- `.claude/agents/source-improver.md` - 원본 개선 (문장/문단/후킹)
 - `.claude/agents/content-analyzer.md` - 원본 분석
 - `.claude/agents/linkedin-writer.md` - 링크드인 변환
-- `.claude/agents/x-writer.md` - X 변환
+- `.claude/agents/x-writer.md` - X 변환 (알고리즘 최적화)
 - `.claude/agents/newsletter-writer.md` - 뉴스레터 변환
 - `.claude/agents/reviewer.md` - 검수
 
@@ -102,6 +106,13 @@ model: sonnet 또는 haiku
 ```
 입력: 스레드 원본
     ↓
+[0] 원본 개선 (source-improver) ← NEW
+    - 문장 구조 개선
+    - 문단 구조 개선
+    - 후킹 멘트 강화
+    - 가독성 향상
+    - Before/After 비교 제공
+    ↓
 [1] 콘텐츠 분석 (content-analyzer)
     - 핵심 메시지 추출
     - 주요 포인트 3개
@@ -110,7 +121,7 @@ model: sonnet 또는 haiku
     ↓
 [2] 채널별 변환 (순차 실행)
     - linkedin-writer → 800~1,300자
-    - x-writer → 280자 이내
+    - x-writer → 280자 이내 (알고리즘 최적화)
     - newsletter-writer → 1,500~3,000자
     ↓
 [3] 검수 (reviewer)
@@ -119,7 +130,7 @@ model: sonnet 또는 haiku
     - 규격 준수
     - CTA 적절성
     ↓
-출력: 3개 채널 콘텐츠 + 검수 결과
+출력: 개선된 원본 + 3개 채널 콘텐츠 + 검수 결과
 ```
 
 ---
@@ -127,6 +138,11 @@ model: sonnet 또는 haiku
 ## 출력 형식
 
 ```markdown
+## ✨ 원본 개선
+[개선된 원본 + Before/After 비교]
+
+---
+
 ## 📊 콘텐츠 분석
 [분석 결과 YAML]
 
