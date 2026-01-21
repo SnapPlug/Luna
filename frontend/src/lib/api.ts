@@ -34,6 +34,20 @@ async function fetchWithAuth(
   });
 }
 
+interface ImprovedSource {
+  content: string;
+  changes: Array<{
+    type: string;
+    before: string;
+    after: string;
+  }>;
+  hook_options: {
+    question: string;
+    number: string;
+    shock: string;
+  };
+}
+
 interface AnalyzeResult {
   linkedin: string;
   x: string;
@@ -42,6 +56,7 @@ interface AnalyzeResult {
     core_message: string;
     hook_pattern: string;
   };
+  improved_source?: ImprovedSource;
 }
 
 /**
@@ -135,6 +150,42 @@ export async function getNotionHistory(): Promise<ApiResponse<NotionHistoryResul
     return { data };
   } catch (error) {
     console.error("Notion History API Error:", error);
+    return { error: "서버 연결에 실패했습니다." };
+  }
+}
+
+interface PublishParams {
+  content: string;
+  mode: "x" | "linkedin" | "both";
+}
+
+interface PublishResult {
+  success: boolean;
+  message: string;
+  result?: unknown;
+}
+
+/**
+ * n8n을 통해 소셜 미디어에 포스팅
+ */
+export async function publishToSocial(
+  params: PublishParams
+): Promise<ApiResponse<PublishResult>> {
+  try {
+    const response = await fetchWithAuth("/api/publish", {
+      method: "POST",
+      body: JSON.stringify(params),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return { error: data.error || "포스팅 중 오류가 발생했습니다." };
+    }
+
+    return { data };
+  } catch (error) {
+    console.error("Publish API Error:", error);
     return { error: "서버 연결에 실패했습니다." };
   }
 }

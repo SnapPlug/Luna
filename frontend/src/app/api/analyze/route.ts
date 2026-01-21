@@ -46,12 +46,31 @@ const BASE_SYSTEM_PROMPT = `당신은 Luna, AI 마케팅 콘텐츠 변환 전문
 - 소제목 필수
 - 회신 유도 CTA 포함
 
+## 원본 개선 (Source Improvement)
+원본 콘텐츠를 분석하여 개선된 버전을 제공합니다:
+- 문장 구조: 긴 문장 분리, 중복 제거
+- 문단 구조: 논리적 흐름, 리스트화
+- 후킹 멘트: 더 임팩트 있는 첫 줄로 개선
+- 가독성: 전문 용어 → 쉬운 말, 적절한 줄바꿈
+
 ## 출력 형식
 반드시 아래 JSON 형식으로만 응답하세요. 다른 텍스트 없이 JSON만 출력합니다:
 {
   "analysis": {
     "core_message": "핵심 메시지 한 줄",
     "hook_pattern": "사용된 훅 패턴 (story/question/number/shock/secret/contrast)"
+  },
+  "improved_source": {
+    "content": "개선된 원본 콘텐츠 (문장/문단/후킹 개선)",
+    "changes": [
+      {"type": "hook", "before": "원본 첫 줄", "after": "개선된 첫 줄"},
+      {"type": "sentence", "before": "긴 문장 예시", "after": "분리된 문장"}
+    ],
+    "hook_options": {
+      "question": "질문형 훅 옵션",
+      "number": "숫자형 훅 옵션",
+      "shock": "충격형 훅 옵션"
+    }
   },
   "x": "X 콘텐츠 (280자 이내)",
   "linkedin": "링크드인 콘텐츠 (800~1,300자, 해시태그 포함)",
@@ -134,6 +153,15 @@ ${sanitizedContent}`,
         analysis: {
           core_message: "분석 실패",
           hook_pattern: "unknown",
+        },
+        improved_source: {
+          content: sanitizedContent,
+          changes: [],
+          hook_options: {
+            question: "",
+            number: "",
+            shock: "",
+          },
         },
       };
     }

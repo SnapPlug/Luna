@@ -5,7 +5,7 @@ import { ReactNode } from "react";
 interface MobileFrameProps {
   title: string;
   icon: string;
-  color: "blue" | "gray" | "purple";
+  color: "blue" | "gray" | "purple" | "green";
   children: ReactNode;
 }
 
@@ -21,6 +21,10 @@ const colorStyles = {
   purple: {
     accent: "bg-purple-500",
     text: "text-purple-400",
+  },
+  green: {
+    accent: "bg-green-500",
+    text: "text-green-400",
   },
 };
 
