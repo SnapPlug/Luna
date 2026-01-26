@@ -42,6 +42,7 @@ export default function Home() {
   const [saveStatus, setSaveStatus] = useState<{ success: boolean; url?: string } | null>(null);
   const [publishStatus, setPublishStatus] = useState<{ success: boolean; message?: string } | null>(null);
   const [viewMode, setViewMode] = useState<"before" | "after">("before");
+  const [improvedCopied, setImprovedCopied] = useState(false);
 
   const handleAnalyze = async () => {
     if (!content.trim()) {
@@ -229,12 +230,22 @@ export default function Home() {
 
                 {/* 개선된 버전 복사 버튼 */}
                 <button
-                  onClick={() => {
-                    navigator.clipboard.writeText(results.improved_source?.content || "");
+                  onClick={async () => {
+                    try {
+                      await navigator.clipboard.writeText(results.improved_source?.content || "");
+                      setImprovedCopied(true);
+                      setTimeout(() => setImprovedCopied(false), 2000);
+                    } catch (err) {
+                      console.error("복사 실패:", err);
+                    }
                   }}
-                  className="mt-3 w-full py-2 px-4 rounded-lg text-sm font-medium text-white bg-green-600 hover:bg-green-700 transition-all"
+                  className={`mt-3 w-full py-2 px-4 rounded-lg text-sm font-medium text-white transition-all ${
+                    improvedCopied
+                      ? "bg-green-500"
+                      : "bg-green-600 hover:bg-green-700"
+                  }`}
                 >
-                  개선된 버전 복사
+                  {improvedCopied ? "✓ 복사됨" : "개선된 버전 복사"}
                 </button>
               </div>
             )}
